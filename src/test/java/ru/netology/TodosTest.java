@@ -1,4 +1,5 @@
 package ru.netology;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,10 +17,10 @@ public class TodosTest {
             "Во вторник после обеда"
     );
 
+    Todos todos = new Todos();
+
     @BeforeEach
     public void init() {
-        Todos todos = new Todos();
-
         todos.add(simpleTask);
         todos.add(epic);
         todos.add(meeting);
@@ -27,7 +28,6 @@ public class TodosTest {
 
     @Test
     public void shouldAddThreeTasksOfDifferentType() {
-
         Task[] expected = {simpleTask, epic, meeting};
         Task[] actual = todos.findAll();
         Assertions.assertArrayEquals(expected, actual);
@@ -35,13 +35,6 @@ public class TodosTest {
 
     @Test
     public void shouldSearchNoQuery() {
-
-        Todos todos = new Todos();
-
-        todos.add(simpleTask);
-        todos.add(epic);
-        todos.add(meeting);
-
         Task[] expected = {};
         Task[] actual = todos.search("Мясо");
         Assertions.assertArrayEquals(expected, actual);
@@ -49,13 +42,6 @@ public class TodosTest {
 
     @Test
     public void shouldSearchSimpleTask() {
-
-        Todos todos = new Todos();
-
-        todos.add(simpleTask);
-        todos.add(epic);
-        todos.add(meeting);
-
         Task[] expected = {simpleTask};
         Task[] actual = todos.search("Позвонить");
         Assertions.assertArrayEquals(expected, actual);
@@ -63,13 +49,6 @@ public class TodosTest {
 
     @Test
     public void shouldSearchSubtasks() {
-
-        Todos todos = new Todos();
-
-        todos.add(simpleTask);
-        todos.add(epic);
-        todos.add(meeting);
-
         Task[] expected = {epic};
         Task[] actual = todos.search("Молоко");
         Assertions.assertArrayEquals(expected, actual);
@@ -77,17 +56,80 @@ public class TodosTest {
 
     @Test
     public void shouldSearchMeeting() {
-
-        Todos todos = new Todos();
-
-        todos.add(simpleTask);
-        todos.add(epic);
-        todos.add(meeting);
-
         Task[] expected = {meeting};
         Task[] actual = todos.search("Выкатка");
         Assertions.assertArrayEquals(expected, actual);
     }
 
+    @Test
+    public void shouldSearchAll() {
+        SimpleTask simpleTask1 = new SimpleTask(5, "Позвонить родителям");
 
+        String[] subtasks1 = {"Позвонить в офис", "Съездить на встречу"};
+        Epic epic1 = new Epic(55, subtasks1);
+
+        Meeting meeting1 = new Meeting(
+                555,
+                "Позвонить партнерам",
+                "Приложение НетоБанка",
+                "Во вторник после обеда"
+        );
+
+        Todos todos1 = new Todos();
+        todos1.add(simpleTask1);
+        todos1.add(epic1);
+        todos1.add(meeting1);
+
+        Task[] expected = {simpleTask1, epic1, meeting1};
+        Task[] actual = todos1.search("Позвонить");
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldSearchEpicWithTwoSubtasks() {
+        SimpleTask simpleTask1 = new SimpleTask(5, "Позвонить родителям");
+
+        String[] subtasks1 = {"Съездить в офис", "Съездить на встречу"};
+        Epic epic1 = new Epic(55, subtasks1);
+
+        Meeting meeting1 = new Meeting(
+                555,
+                "Позвонить партнерам",
+                "Приложение НетоБанка",
+                "Во вторник после обеда"
+        );
+
+        Todos todos1 = new Todos();
+        todos1.add(simpleTask1);
+        todos1.add(epic1);
+        todos1.add(meeting1);
+
+        Task[] expected = {epic1};
+        Task[] actual = todos1.search("Съездить");
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldSearchEpicWithTwoMeetingElements() {
+        SimpleTask simpleTask1 = new SimpleTask(5, "Позвонить родителям");
+
+        String[] subtasks1 = {"Съездить в офис", "Съездить на встречу"};
+        Epic epic1 = new Epic(55, subtasks1);
+
+        Meeting meeting1 = new Meeting(
+                555,
+                "Проект НетоБанка",
+                "Приложение НетоБанка",
+                "Во вторник после обеда"
+        );
+
+        Todos todos1 = new Todos();
+        todos1.add(simpleTask1);
+        todos1.add(epic1);
+        todos1.add(meeting1);
+
+        Task[] expected = {meeting1};
+        Task[] actual = todos1.search("НетоБанка");
+        Assertions.assertArrayEquals(expected, actual);
+    }
 }
